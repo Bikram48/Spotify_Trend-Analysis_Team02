@@ -15,6 +15,8 @@ app.layout = html.Div([
             id='selector',
             options=[
                 {'label': 'Top 10 Artists by Popularity', 'value': 'artists'},
+                {'label': 'Top 10 Artists by Number of Tracks',
+                    'value': 'artists_tracks'},
                 {'label': 'Top 10 Songs', 'value': 'songs'},
                 {'label': 'Best Album', 'value': 'album'}
             ],
@@ -35,6 +37,11 @@ def update_graph(selected_value):
             10, 'popularity').reset_index()
         fig = px.bar(top_artists, x='Artist', y='popularity',
                      title='Top 10 Artists by Popularity')
+    elif selected_value == 'artists_tracks':
+        top_artists = data_df.groupby('Artist').size().nlargest(
+            10).reset_index(name='Count')
+        fig = px.bar(top_artists, x='Artist', y='Count',
+                     title='Top 10 Artists by Number of Tracks')
     elif selected_value == 'songs':
         top_songs = data_df.nlargest(10, 'popularity')
         fig = px.bar(top_songs, x='Track Name', y='popularity',
